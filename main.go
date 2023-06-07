@@ -33,7 +33,7 @@ func main() {
 		}
 	}
 
-	title := fmt.Sprintf("Security Alert Aggregation for %s", repository)
+	title := fmt.Sprintf("Security Alert Aggregation for %s (%d)", repository, count)
 
 	content := "# Security Alert Aggregation"
 	content += "\n\n"
