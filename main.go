@@ -32,14 +32,19 @@ func main() {
 	readBytes, _ := io.ReadAll(jsonFile)
 	fmt.Println(string(readBytes))
 
+	token := os.Getenv("GITHUB_TOKEN")
 	if *githubToken == "" {
 		fmt.Println("Please provide a GitHub Token")
 		return
+
+	} else {
+		token = *githubToken
 	}
+
 	repository := os.Getenv("GITHUB_REPOSITORY")
 	url := os.Getenv("GITHUB_API_URL")
 
-	codeScanningAlerts := getCodeScanningAlerts(*githubToken, url, repository)
+	codeScanningAlerts := getCodeScanningAlerts(token, url, repository)
 
 	var rows string
 	count := 0
@@ -61,7 +66,7 @@ func main() {
 	content += "|---|---|---|---|---|---|" + "\n"
 	content += rows
 
-	issue := createIssue(*githubToken, url, repository, title, content)
+	issue := createIssue(token, url, repository, title, content)
 	fmt.Println(issue)
 }
 
