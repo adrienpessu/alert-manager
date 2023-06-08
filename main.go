@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+import "github.com/gorhill/cronexpr"
+
 func main() {
 	githubToken := flag.String("token", "", "GitHub Token to use for authentication")
 	flag.Parse()
@@ -30,7 +32,24 @@ func main() {
 
 	// read our opened jsonFile as a byte array.
 	readBytes, _ := io.ReadAll(jsonFile)
-	fmt.Println(string(readBytes))
+	jsonString := string(readBytes)
+
+	// Mashal the json to a map
+	var result map[string]interface{}
+	json.Unmarshal([]byte(jsonString), &result)
+
+	var lastExecutionDate time.Time
+
+	if result["schedule"] != nil && result["schedule"].(string) != "" {
+		cron := result["schedule"].(string)
+		// calculate next execution time
+		now := time.Now()
+		next := cronexpr.MustParse(cron).Next(now)
+
+		diff := next.Sub(now)
+		lastExecutionDate = now.Add(-diff)
+
+	}
 
 	token := os.Getenv("GITHUB_TOKEN")
 	if *githubToken != "" {
@@ -46,6 +65,9 @@ func main() {
 	count := 0
 	for _, alert := range codeScanningAlerts {
 		if alert.State == "dismissed" && alert.DismissedReason != "" {
+			if alert.DismissedAt.Before(lastExecutionDate) {
+				continue
+			}
 			rows += fmt.Sprintf("| %d | %s | %s | %s | %s | %s | \n", alert.Number, alert.DismissedReason, alert.DismissedBy.HTMLURL, alert.DismissedAt, alert.DismissedComment, alert.MostRecentInstance.Ref)
 			count++
 		}
