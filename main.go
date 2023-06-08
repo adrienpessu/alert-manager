@@ -15,6 +15,23 @@ import (
 func main() {
 	githubToken := flag.String("token", "", "GitHub Token to use for authentication")
 	flag.Parse()
+	fmt.Println(os.Getenv("GITHUB_EVENT_NAME"))
+	fmt.Println(os.Getenv("GITHUB_EVENT_PATH"))
+	fmt.Println(os.Getenv("GITHUB_ACTOR"))
+
+	// open file
+	jsonFile, err := os.Open(os.Getenv("GITHUB_EVENT_PATH"))
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Successfully Opened users.json")
+	// defer the closing of our jsonFile so that we can parse it later on
+	defer jsonFile.Close()
+
+	// read our opened jsonFile as a byte array.
+	readBytes, _ := io.ReadAll(jsonFile)
+	fmt.Println(string(readBytes))
+
 	if *githubToken == "" {
 		fmt.Println("Please provide a GitHub Token")
 		return
