@@ -39,7 +39,7 @@ func main() {
 	content += "\n\n"
 	content += fmt.Sprintf("The number of security alerts for user %s and reason false positive is %d", os.Getenv("GITHUB_ACTOR"), count)
 	content += "\n\n"
-	content += "| Number | Dismissed reason | Dismissed by | Dismissed at | Dismissed Comment | Repository |"
+	content += "| Number | Dismissed reason | Dismissed by | Dismissed at | Dismissed Comment | Ref |"
 	content += "\n"
 	content += "|---|---|---|---|---|---|" + "\n"
 	content += rows
