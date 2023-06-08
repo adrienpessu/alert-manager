@@ -9,3 +9,6 @@ runs:
 
     - run: go run ${{ github.action_path }}/main.go
       shell: bash
+branding:
+  icon: 'lock'
+  color: 'yellow'
