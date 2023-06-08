@@ -33,11 +33,7 @@ func main() {
 	fmt.Println(string(readBytes))
 
 	token := os.Getenv("GITHUB_TOKEN")
-	if *githubToken == "" {
-		fmt.Println("Please provide a GitHub Token")
-		return
-
-	} else {
+	if *githubToken != "" {
 		token = *githubToken
 	}
 
